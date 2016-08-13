@@ -1,0 +1,44 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides: thedashDBdocker
+# Required-Start: $remote_fs $syslog
+# Required-Stop: $remote_fs $syslog
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: thedashDBdockerAutostarer
+# Description:  This file provide automatic starts and stops for the IBM dashDB Local server by docker. Krzysztof Paz. 2016.
+# Description1: Example Ubuntu deployment method:
+# Description2: Become root. Setup your docker and dashDB Local accordingly to its instructions.
+# Description3: still as the root user: copy the script on the "/etc/init.d/thedashDBdocker" location,
+# Description4: then make it executable: "chmod +x /etc/init.d/thedashDBdocker" 
+# Description5: and finally make the links with the command: "update-rc.d thedashDBdocker defaults 95 15"
+### END INIT INFO
+
+case "$1" in
+ start)
+   docker start dashDB
+   sleep 3
+   docker exec -it dashDB start 
+   sleep 1
+   ;;
+ stop)
+   docker exec -it dashDB stop
+   sleep 10
+   docker stop dashDB
+   sleep 5
+   ;;
+ restart)
+   docker exec -it dashDB stop
+   sleep 10
+   docker stop dashDB
+   sleep 5
+   docker start dashDB
+   sleep 3
+   docker exec -it dashDB start
+   sleep 1
+   ;;
+ *)
+   echo "Usage: thedashDBdocker {start|stop|restart}" >&2
+   exit 3
+   ;;
+esac
